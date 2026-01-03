@@ -16,4 +16,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://obuchenie-operacionnyj-direktor.vercel.app/
+Sitemap: https://obuchenie-operacionnyj-direktor.vercel.app/sitemap.xml
