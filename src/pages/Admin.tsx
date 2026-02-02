@@ -59,6 +59,7 @@ import {
 } from 'lucide-react';
 import { SitePage, PageBlocks } from '@/contexts/ContentContext';
 import { Switch } from '@/components/ui/switch';
+import { SeoHtmlGenerator } from '@/components/SeoHtmlGenerator';
 import {
   DndContext,
   closestCenter,
@@ -172,6 +173,9 @@ const AdminContent = () => {
     }
   }, []);
 
+  // Ref для сброса file input
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
   const handleFileUpload = (file: File, pageSlug: string) => {
     if (!file.name.endsWith('.json')) {
       toast.error('Пожалуйста, загрузите JSON файл');
@@ -188,10 +192,27 @@ const AdminContent = () => {
             ? 'главной страницы' 
             : pageSlug;
         toast.success(`Контент успешно загружен для ${pageName}!`);
-        setShowImportDialog(false);
-        setImportFile(null);
+        // Сохраняем сразу после импорта
+        setTimeout(() => {
+          saveNow();
+        }, 100);
       } else {
         toast.error('Ошибка при загрузке файла. Проверьте структуру JSON.');
+      }
+      // Всегда очищаем состояние после попытки
+      setShowImportDialog(false);
+      setImportFile(null);
+      // Сбрасываем file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    };
+    reader.onerror = () => {
+      toast.error('Ошибка чтения файла');
+      setShowImportDialog(false);
+      setImportFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
       }
     };
     reader.readAsText(file);
@@ -244,6 +265,8 @@ const AdminContent = () => {
       setImportFile(file);
       setShowImportDialog(true);
     }
+    // Сбрасываем input чтобы можно было загрузить тот же файл повторно
+    e.target.value = '';
   };
 
   // Обновление курса
@@ -717,6 +740,7 @@ const AdminContent = () => {
               </p>
               <label>
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept=".json"
                   onChange={handleFileInputChange}
@@ -952,10 +976,14 @@ const AdminContent = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="seo" className="space-y-6">
-          <TabsList className="grid grid-cols-4 md:grid-cols-8 w-full">
+          <TabsList className="grid grid-cols-4 md:grid-cols-9 w-full">
             <TabsTrigger value="seo" className="flex items-center gap-2">
               <Settings className="w-4 h-4" />
               <span className="hidden sm:inline">SEO</span>
+            </TabsTrigger>
+            <TabsTrigger value="html" className="flex items-center gap-2">
+              <Globe className="w-4 h-4" />
+              <span className="hidden sm:inline">HTML</span>
             </TabsTrigger>
             <TabsTrigger value="author" className="flex items-center gap-2">
               <User className="w-4 h-4" />
@@ -1302,6 +1330,11 @@ ${urls.map(url => `  <url>
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* HTML Generator Tab */}
+          <TabsContent value="html">
+            <SeoHtmlGenerator />
           </TabsContent>
 
           {/* Author Tab */}
