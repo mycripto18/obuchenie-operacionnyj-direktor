@@ -213,6 +213,7 @@ export const StaticHtmlGenerator: React.FC = () => {
             </div>
             <a href="${course.url || '#'}" class="course-title-link" target="_blank" rel="noopener">${escapeHtml(course.title || '')}</a>
             <p class="course-school">${escapeHtml(course.school || '')}</p>
+            ${course.promoCode?.code ? `<div class="course-promo-mobile"><span>🎁</span> <code>${escapeHtml(course.promoCode.code)}</code>${course.promoCode.discountPercent ? ` <span class="promo-discount">(-${course.promoCode.discountPercent}%)</span>` : ''}</div>` : ''}
             <div class="course-buttons">
               <a href="#course-${i + 1}" class="btn btn-secondary">Подробнее</a>
               <a href="${course.url || '#'}" class="btn btn-primary" target="_blank" rel="noopener">На сайт →</a>
