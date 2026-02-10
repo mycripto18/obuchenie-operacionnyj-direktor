@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ContentProvider } from "@/contexts/ContentContext";
 import Admin from "./pages/Admin";
 
@@ -43,8 +43,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/panel-x7k9m2" element={<Admin />} />
-            {/* Все остальные маршруты — статический HTML в продакшене */}
-            <Route path="*" element={<HomePage />} />
+            <Route path="*" element={<Navigate to="/panel-x7k9m2" replace />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
