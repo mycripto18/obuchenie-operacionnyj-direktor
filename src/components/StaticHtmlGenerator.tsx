@@ -237,7 +237,7 @@ export const StaticHtmlGenerator: React.FC = () => {
               <td style="text-align:center">${i + 1} ${getMedal(i + 1)}</td>
               <td><a href="${course.url || '#'}" target="_blank" rel="noopener">${escapeHtml(course.title || '')}</a></td>
               <td>${escapeHtml(course.school || '')}</td>
-              <td>${formatPrice(course.price)}</td>
+              <td>${formatPrice(course.price)}${course.promoCode?.code ? `<br><span class="table-promo">🎁 <code>${escapeHtml(course.promoCode.code)}</code>${course.promoCode.discountPercent ? ` (-${course.promoCode.discountPercent}%)` : ''}</span>` : ''}</td>
               <td style="text-align:center"><a href="${course.url || '#'}" class="btn btn-primary" target="_blank" rel="noopener">На сайт →</a></td>
             </tr>`).join('')}
           </tbody>
@@ -305,7 +305,7 @@ export const StaticHtmlGenerator: React.FC = () => {
           <div class="info-item info-promo">
             <span class="info-icon">🎁</span>
             <div>
-              <p class="info-label">${escapeHtml(course.promoCode.discountText || 'Скидка')}</p>
+              <p class="info-label">${escapeHtml(course.promoCode.discountText || 'Скидка')}${course.promoCode.discountPercent ? ` (-${course.promoCode.discountPercent}%)` : ''}</p>
               <div class="promo-code-wrapper">
                 <span>Промокод:</span>
                 <code>${escapeHtml(course.promoCode.code)}</code>
@@ -442,8 +442,7 @@ export const StaticHtmlGenerator: React.FC = () => {
     <div class="container">
       ${disclosure ? `<p class="footer-text">${escapeHtml(disclosure)}</p>` : ''}
       ${footerText ? `<p class="footer-text">${escapeHtml(footerText)}</p>` : ''}
-      <p class="footer-text">© ${new Date().getFullYear()} — Все права защищены</p>
-      ${footerEmail ? `<p class="footer-text"><a href="mailto:${escapeHtml(footerEmail)}">${escapeHtml(footerEmail)}</a></p>` : ''}
+      <p class="footer-text">© ${new Date().getFullYear()}${footerEmail ? ` &nbsp;•&nbsp; <a href="mailto:${escapeHtml(footerEmail)}">Контакты</a>` : ''}</p>
       ${allLinks.length > 0 ? `<div class="footer-links">\n        ${allLinks.join('\n        ')}\n      </div>` : ''}
     </div>
   </footer>`;
